@@ -61,11 +61,12 @@ uvicorn app:app --reload
 - Get a contextual answer from the backend AI
 
 ## 🛡️ Environment Variables (if applicable)
+
 - Set up the following in your .env file or system environment:
 
 - `MONGODB_URI`
 
 - `QDRANT_URL` or local config
 
-- `HuggingFace model` details (in embeddings.py)
+- `HuggingFace model`a details (in embeddings.py)
 
