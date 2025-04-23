@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="styles.css" />
+</head>
+<body>
+  <div class="chat-container">
+    <!-- Close button added here -->
+    <div class="chat-header">
+      <span>Chat with AI</span>
+      <button id="closeBtn" class="close-btn">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4.5 20.5l15-15m-15 0l15 15" />
+        </svg>
+      </button>
+    </div>
+    <div id="chat-box" class="chat-box"></div>
+    <div class="input-box">
+      <input
+        type="text"
+        id="userInput"
+        placeholder="Type a message..."
+        autocomplete="off"
+      />
+      <button id="sendBtn">Send</button>
+    </div>
+  </div>
+  <script src="scripts.js"></script>
+</body>
+</html>
