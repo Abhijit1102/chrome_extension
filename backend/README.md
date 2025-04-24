@@ -19,15 +19,6 @@ This is a FastAPI-based backend service that allows you to:
 
 ---
 
-## 📦 Folder Structure
-. ├── main.py # FastAPI entry point ├── src/ │ ├── embeddings/ │ │ ├── Quadrant.py # Qdrant integration │ │ └── huggingface_embeddings.py # Embedding generator │ ├── model/ │ │ ├── requestSchema.py # Pydantic schema for URL request │ │ └── chatSchema.py # Pydantic schema for chat input │ ├── utils.py # Document processor │ └── llm/ │ └── ChatBot.py # LLM-based chatbot class
-
-yaml
-Copy
-Edit
-
----
-
 ## 🛠️ Installation
 
 ### Prerequisites

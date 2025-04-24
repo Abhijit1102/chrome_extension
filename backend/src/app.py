@@ -8,11 +8,13 @@ from src.model.chatSchema import ChatRequest
 from src.embeddings.huggingface_embeddings import get_embedding
 from src.utils import DocumentProcessor
 from src.llm.ChatBot import ChatAssistant
+from src.database.mongodb_connection import MongoDBClient
 
 import asyncio
 
 qdrant_store = QdrantVectorStore()
 chat = ChatAssistant()
+client = MongoDBClient()
 
 app = FastAPI(
     title="My API",
@@ -64,7 +66,7 @@ async def chat_endpoint(request: ChatRequest):
 
         content = "".join(chunk.payload["text"] for chunk in similar_chunks)
         response_message = chat.ask(user_message, content)
-
+        client.insert_chat_log({"user_message": user_message, "response_message": response_message})
         return {"message": response_message}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

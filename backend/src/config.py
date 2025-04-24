@@ -15,6 +15,8 @@ class Config:
         self.OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
         self.OPENAI_MODEL = os.getenv("OPENAI_MODEL")
 
+        self.MONGODB_URL = os.getenv("MONGODB_URL")
+        self.MONGODB_DB_NAME = os.getenv("MONGODB_DB_NAME")
     def get_huggingface_api_key(self):
         return self.HUGGINGFACE_API_KEY
 
@@ -34,4 +36,13 @@ class Config:
         return self.OPENAI_API_KEY
 
     def get_openai_api_model(self):
-        return self.OPENAI_MODEL   
+        return self.OPENAI_MODEL  
+
+    def get_mongodb_url(self):
+        return self.MONGODB_URL 
+
+    def get_mongodb_db_name(self):
+        return self.MONGODB_DB_NAME   
+
+    def get_mongodb_collection_name(self):    
+        return self.MONGODB_COLLECTION_NAME
