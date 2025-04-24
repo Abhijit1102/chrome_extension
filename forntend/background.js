@@ -7,7 +7,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 async function processActiveTabURL(tabUrl) {
   try {
-    const response = await fetch("https://chromeextensionbackend-production.up.railway.app/api/v1/process_url", {
+    const response = await fetch("http://127.0.0.1:8000/api/v1/process_url", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
