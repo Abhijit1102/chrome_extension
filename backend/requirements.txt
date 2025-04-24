@@ -1,0 +1,10 @@
+python-dotenv
+beautifulsoup4 
+requests
+fastapi[all]
+langchain
+langchain-community
+langchain_openai
+qdrant-client
+pymongo
+

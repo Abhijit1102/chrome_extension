@@ -1,4 +1,4 @@
-const apiUrl = "https://chromeextensionbackend-production.up.railway.app/api/v1";
+const apiUrl = "http://127.0.0.1:8000/api/v1";
 function showInitialMessage() {
   appendMessage("bot", "Please wait until content is uploaded...");
 }
@@ -53,22 +53,20 @@ function sendMessage() {
   getBotReply(userInputValue);
 }
 
-// ✅ Append message to chat window
 function appendMessage(type, message) {
   const chatBox = document.getElementById("chat-box");
   const messageDiv = document.createElement("div");
   messageDiv.classList.add("chat-message", type);
   messageDiv.innerText = message;
   chatBox.appendChild(messageDiv);
-  chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to bottom
+  chatBox.scrollTop = chatBox.scrollHeight; 
 }
 
-// ✅ Get chatbot reply from backend
 async function getBotReply(userInput) {
   const url = `${apiUrl}/get_answer`;
 
   const data = {
-    query_text: userInput,
+    message: userInput, 
   };
 
   try {
@@ -88,7 +86,7 @@ async function getBotReply(userInput) {
     }
 
     const result = await response.json();
-    const botReply = result?.answer || "I'm not sure.";
+    const botReply = result?.message || "I'm not sure.";
     console.log("🤖 Bot Reply:", botReply);
     appendMessage("bot", botReply);
   } catch (error) {
