@@ -19,15 +19,6 @@ This is a FastAPI-based backend service that allows you to:
 
 ---
 
-## 📦 Folder Structure
-. ├── main.py # FastAPI entry point ├── src/ │ ├── embeddings/ │ │ ├── Quadrant.py # Qdrant integration │ │ └── huggingface_embeddings.py # Embedding generator │ ├── model/ │ │ ├── requestSchema.py # Pydantic schema for URL request │ │ └── chatSchema.py # Pydantic schema for chat input │ ├── utils.py # Document processor │ └── llm/ │ └── ChatBot.py # LLM-based chatbot class
-
-yaml
-Copy
-Edit
-
----
-
 ## 🛠️ Installation
 
 ### Prerequisites
@@ -46,10 +37,9 @@ pip install -r requirements.txt
 🧪 Run the Server
 
 ```bash
-
 uvicorn main:app --reload
-Visit Swagger UI at: http://127.0.0.1:8000/api/v1/docs
 ```
+Visit Swagger UI at: http://127.0.0.1:8000/api/v1/docs
 
 📡 API Endpoints
 GET /api/v1/healthcheck
@@ -60,9 +50,9 @@ Processes the content at a given URL, creates embeddings, and uploads to Qdrant.
 
 ```json 
 { "message": "Text processed and uploaded to Qdrant." }
+```
 POST /api/v1/get_answer
 Queries your ingested documents with a natural language question.
-```
 Request:
 
 ```json
