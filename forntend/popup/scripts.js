@@ -1,15 +1,16 @@
 const apiUrl = "http://127.0.0.1:8000/api/v1";
+
 function showInitialMessage() {
   appendMessage("bot", "Please wait until content is uploaded...");
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   showInitialMessage();
+
   const closeBtn = document.getElementById("closeBtn");
   const sendBtn = document.getElementById("sendBtn");
   const userInput = document.getElementById("userInput");
 
-  // ✅ Attach button listeners
   closeBtn.addEventListener("click", closeChat);
   sendBtn.addEventListener("click", sendMessage);
   userInput.addEventListener("keypress", function (e) {
@@ -18,7 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ✅ Get active tab URL and send to background for processing
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     if (tabs.length > 0) {
       const activeTab = tabs[0];
@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// ✅ Listen for background messages (processed URL results)
 chrome.runtime.onMessage.addListener((message) => {
   if (message.type === "url_processed") {
     console.log("📩 Message from background:", message.message);
@@ -41,7 +40,6 @@ chrome.runtime.onMessage.addListener((message) => {
   }
 });
 
-// ✅ Send user input to chatbot and get response
 function sendMessage() {
   const userInput = document.getElementById("userInput");
   const userInputValue = userInput.value.trim();
@@ -55,18 +53,32 @@ function sendMessage() {
 
 function appendMessage(type, message) {
   const chatBox = document.getElementById("chat-box");
+
+  // Remove previous processing message
+  if (type === "bot") {
+    const existingProcessing = chatBox.querySelector(".chat-message.bot.processing");
+    if (existingProcessing) {
+      existingProcessing.remove();
+    }
+  }
+
   const messageDiv = document.createElement("div");
   messageDiv.classList.add("chat-message", type);
+
+  if (type === "bot" && message === "Please wait until content is uploaded...") {
+    messageDiv.classList.add("processing");
+  }
+
   messageDiv.innerText = message;
   chatBox.appendChild(messageDiv);
-  chatBox.scrollTop = chatBox.scrollHeight; 
+  chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 async function getBotReply(userInput) {
   const url = `${apiUrl}/get_answer`;
 
   const data = {
-    message: userInput, 
+    message: userInput,
   };
 
   try {
@@ -97,7 +109,7 @@ async function getBotReply(userInput) {
 
 async function closeChat() {
   if (window.confirm("Are you sure you want to close this window?")) {
-    window.close(); 
+    window.close();
   } else {
     console.log("🔄 Chat window not closed.");
   }
