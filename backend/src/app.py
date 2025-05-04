@@ -8,11 +8,13 @@ from src.model.chatSchema import ChatRequest
 from src.embeddings.huggingface_embeddings import get_embedding
 from src.utils import DocumentProcessor
 from src.llm.ChatBot import ChatAssistant
+from src.database.mongodb_connection import MongoDBClient
 
 import asyncio
 
 qdrant_store = QdrantVectorStore()
 chat = ChatAssistant()
+client = MongoDBClient()
 
 app = FastAPI(
     title="My API",
@@ -35,7 +37,7 @@ api_router = APIRouter(prefix="/api/v1")
 async def startup_event():
     await qdrant_store.create_collection()
 
-@api_router.get("/heathcheck")
+@api_router.get("/healthcheck")
 async def read_root():
     return {"message": "Api is running in port 8000!"}
 
@@ -45,11 +47,11 @@ async def process_url(request: UrlRequest):
         processor = DocumentProcessor(request.url)
         processor.process_all()  
         chunks = processor.get_cleaned_chunks()
-
-        for chunk in chunks:
-            embedding = await get_embedding(chunk)
-            metadata = {"source_url": request.url}
-            await qdrant_store.upload_embedding(chunk, embedding, metadata)
+        # print("length of chunks : ",len(chunks))
+        
+        embeddings = await get_embedding(chunks)
+        # print("length of embeddings : ",len(embeddings))
+        await qdrant_store.upload_embeddings(chunks, embeddings, metadata={"source_url": request.url})
 
         return {"message": "Text processed and uploaded to Qdrant."}
     except Exception as e:
@@ -64,7 +66,7 @@ async def chat_endpoint(request: ChatRequest):
 
         content = "".join(chunk.payload["text"] for chunk in similar_chunks)
         response_message = chat.ask(user_message, content)
-
+        client.insert_chat_log({"user_message": user_message, "response_message": response_message})
         return {"message": response_message}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

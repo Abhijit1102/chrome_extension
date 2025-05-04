@@ -7,7 +7,8 @@ class QdrantVectorStore:
         self.config = Config()
         self.client = AsyncQdrantClient(
             url=self.config.get_qdrant_url(),
-            api_key=self.config.get_qdrant_api_key()
+            api_key=self.config.get_qdrant_api_key(),
+            timeout=120
         )
         self.collection_name = self.config.get_qdrant_collection_name()
         self.vector_size = 384
@@ -27,24 +28,29 @@ class QdrantVectorStore:
         else:
             print(f"Collection '{self.collection_name}' already exists.")
 
-    async def upload_embedding(self, text, vector, metadata=None):
+    async def upload_embeddings(self, chunks, embeddings, metadata=None):
+        # print("metadata : ",metadata)
         if metadata is None:
             metadata = {}
 
-        point = PointStruct(
-            id=abs(hash(text)),
-            vector=vector,
-            payload={
-                "text": text,
-                **metadata
-            }
-        )
+        
+        points = [
+            PointStruct(
+                id=abs(hash(chunk)),  
+                vector=embedding,
+                payload={
+                    "text": chunk,
+                    **metadata
+                }
+            )
+            for chunk, embedding in zip(chunks, embeddings)
+        ]
 
         await self.client.upsert(
             collection_name=self.collection_name,
-            points=[point]
+            points=points
         )
-        print("Embedding uploaded to Qdrant.")
+        print(f"Uploaded {len(points)} embeddings to Qdrant.")
 
     async def delete_collection(self):
         exists = await self.client.collection_exists(self.collection_name)

@@ -1,11 +1,10 @@
 import re
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-
 class DocumentProcessor:
     def __init__(self, url):
         self.url = url
-        self.chunk_size = 5000
+        self.chunk_size = 1000
         self.chunk_overlap = 50
         self.cleaned_chunks = None
 
@@ -32,8 +31,4 @@ class DocumentProcessor:
 
     def get_cleaned_chunks(self):
         return self.cleaned_chunks
-
-    def __repr__(self):
-        count = len(self.cleaned_chunks) if self.cleaned_chunks else 0
-        return f"<DocumentProcessor(url='{self.url}', chunks={count})>"
 
